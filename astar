@@ -1,0 +1,159 @@
+import java.util.*;
+public class Astar1 {
+
+    public static class Node
+    {
+        Node parent;
+        int curr_mat[][] = new int[3][3];
+        int x,y;
+        int cost;
+        int level;
+    }
+
+    public static Node newNode(int curmat[][], int x, int y,
+                               int newX, int newY, int level,
+                               Node parent){
+        Node node = new Node();
+        node.parent = parent;
+         
+        node.curr_mat = new int[3][3];
+        for(int i = 0; i < 3; i++){
+            for(int j = 0; j < 3; j++){
+                node.curr_mat[i][j] = curmat[i][j];
+            }
+        }
+         
+        int temp = node.curr_mat[x][y];
+
+        node.curr_mat[x][y] = node.curr_mat[newX][newY];
+        node.curr_mat[newX][newY]=temp;
+         
+        node.cost = Integer.MAX_VALUE;
+        node.level = level;
+         
+        node.x = newX;
+        node.y = newY;
+         
+        return node;
+    }
+
+    public static void printMatrix(int mat[][]){
+        for(int i = 0; i < 3; i++){
+            for(int j = 0; j < 3; j++){
+                System.out.print(mat[i][j]+" ");
+            }
+            System.out.println("");
+        }
+    }
+    public static int row[] = { 1, 0, -1, 0 };
+    public static int col[] = { 0, -1, 0, 1 };
+
+    public static class comp implements Comparator<Node>{
+        @Override
+        public int compare(Node lhs, Node rhs){
+            return (lhs.cost + lhs.level) > (rhs.cost+rhs.level)?1:-1;
+        }
+    }
+    public static int isSafe(int x, int y)
+    {
+        return (x >= 0 && x < 3 && y >= 0 && y < 3)?1:0;
+    }
+    static int compare(int initial[][],int goal[][]){
+		int counter = 0;
+		
+		for(int i = 0;i<3;i++)
+		{
+			for(int j = 0;j<3;j++)
+			{				
+				if(goal[i][j] != initial[i][j] && initial[i][j] != 0)
+				{
+					counter++;
+				}
+			
+			}
+		
+		
+        }
+		return counter;
+    }
+    public static void printPath(Node root){
+        if(root == null){
+            return;
+        }
+        printPath(root.parent);
+        printMatrix(root.curr_mat);
+        System.out.println("");
+    }
+
+    public static void solve(int initialMat[][], int x, int y, int finalMat[][])
+    {
+       
+        PriorityQueue<Node> pq = new PriorityQueue<>( new comp());
+         
+        Node root = newNode(initialMat, x, y, x, y, 0, null);
+        root.cost = compare(initialMat,finalMat);
+         
+        pq.add(root);
+
+        while(!pq.isEmpty())
+        {
+            Node min = pq.peek();
+            pq.poll();
+             
+            if(min.cost == 0){
+                printPath(min); 
+                return;
+            }
+            for (int i = 0; i < 4; i++)
+            {
+                if (isSafe(min.x + row[i], min.y + col[i])>0)
+                {
+                    Node child = newNode(min.curr_mat, min.x, min.y, min.x + row[i],min.y + col[i], min.level + 1, min);
+                    child.cost = compare(child.curr_mat, finalMat);
+      
+                    pq.add(child);
+                }
+            }
+        }
+    }
+
+
+
+
+    public static void main(String args[])
+    {
+
+		int loc_i=0,loc_j=0;
+
+
+        int [][] in_state = {
+            {2,8,3},
+            {1,6,4},
+            {7,0,5}
+        };
+    
+        int[][] goal_state = {
+            {1,2,3},
+            {8,0,4},
+            {7,6,5}
+        };
+
+
+        for(int i = 0;i<3;i++)
+		{
+			for(int j = 0;j<3;j++)
+			{
+				if(in_state[i][j] == 0)
+				{
+                    loc_i = i;
+					loc_j = j;
+                }
+			
+			}
+		
+		}
+
+        solve(in_state, loc_i, loc_j, goal_state);
+
+    }
+}
