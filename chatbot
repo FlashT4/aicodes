@@ -1,0 +1,39 @@
+class EmployeeEvaluationChatbot:
+    def _init_(self):
+        self.parameters = {
+            "communication_skills": None,
+            "quality_of_work": None,
+            "attendance": None,
+            "collaboration": None,
+            "problem_solving": None,
+            "adaptability": None,
+            "initiative": None,
+            "leadership": None
+        }
+
+    def evaluate_employee(self):
+        for parameter, value in self.parameters.items():
+            print(f"Please rate the employee on a scale of 1 to 5 for {parameter}:")
+            self.parameters[parameter] = int(input())
+
+        total_score = sum(self.parameters.values())
+        average_score = total_score / len(self.parameters)
+
+        print(f"\nEmployee Evaluation Summary:")
+        print(f"Total Score: {total_score}")
+        print(f"Average Score: {average_score}")
+
+        if average_score >= 4:
+            print("The employee has performed exceptionally well.")
+        elif average_score >= 3:
+            print("The employee has performed satisfactorily.")
+        else:
+            print("The employee needs improvement in certain areas.")
+
+    def start(self):
+        print("Welcome to the Employee Evaluation Chatbot!")
+        self.evaluate_employee()
+
+
+chatbot = EmployeeEvaluationChatbot()
+chatbot.start()
