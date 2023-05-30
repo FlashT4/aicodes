@@ -1,0 +1,49 @@
+def graph_coloring(graph, num_colors):
+    # Initialize an empty dictionary to store the color assigned to each vertex
+    color_map = {}
+
+    # Function to check if it's safe to assign a color to a vertex
+    def is_safe(node, color):
+        for neighbor in graph[node]:
+            if color_map.get(neighbor) == color:
+                return False
+        return True
+
+    # Recursive function to assign colors to the vertices
+    def assign_colors(node):
+        # Base case: If all vertices are assigned a color, return True
+        if node == len(graph):
+            return True
+
+        for color in range(1, num_colors + 1):
+            if is_safe(node, color):
+                color_map[node] = color
+
+                # Recursive call to assign colors to the next vertex
+                if assign_colors(node + 1):
+                    return True
+
+                # Backtrack: Remove the color assigned to the current vertex
+                color_map.pop(node)
+
+        return False
+
+    # Start the recursive function from the first vertex (0)
+    if assign_colors(0):
+        print("Graph can be colored with", num_colors, "colors.")
+        print("Color assignment:", color_map)
+    else:
+        print("Graph cannot be colored with", num_colors, "colors.")
+
+# User inputs
+graph = {}
+num_vertices = int(input("Enter the number of vertices in the graph: "))
+
+for i in range(num_vertices):
+    neighbors = input("Enter the neighbors of vertex " + str(i) + " (space-separated): ").split()
+    graph[i] = [int(neighbor) for neighbor in neighbors]
+
+num_colors = int(input("Enter the number of colors to use: "))
+
+# Call the graph coloring function
+graph_coloring(graph, num_colors)
