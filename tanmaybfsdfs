@@ -1,0 +1,44 @@
+graph = {
+    'A': ['B', 'C','D'],
+    'B': ['E', 'F'],
+    'C': ['G', 'H'],
+    'D': ['I','J'],
+    'E': [],
+    'F': [],
+    'G': [],
+    'H': [],
+    'I': [],
+    'J': []
+}
+
+def bfs():
+
+    visited = []
+    queue = []
+    def breadthFirstSearch(visited, graph, node):
+
+
+        visited.append(node)
+        queue.append(node)
+        while queue:
+            m = queue.pop(0)
+            print(m, end=" ")
+            for neighbour in graph[m]:
+                if neighbour not in visited:
+                    visited.append(neighbour)
+                    queue.append(neighbour)
+
+    print("Breadth-First Search: ")
+    breadthFirstSearch(visited, graph, 'A')
+
+
+def dfs():
+    visited = []
+    def depthFirstSearch(visited, graph, node):
+        if node not in visited:
+            print (node,end=" ")
+            visited.append(node)
+            for neighbour in graph[node]:
+                depthFirstSearch(visited, graph, neighbour)
+    print("Depth-First Search")
+    depthFirstSearch(visited, graph, 'A')
